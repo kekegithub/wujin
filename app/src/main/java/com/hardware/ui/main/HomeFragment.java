@@ -24,6 +24,7 @@ import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
 import com.hardware.view.MyGridView;
+import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
@@ -263,6 +264,7 @@ public class HomeFragment extends ABaseFragment{
             if(convertView == null){
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_sale_item,null);
+                viewHolder.imageView = (ImageView)convertView.findViewById(R.id.iv_home_sale_shop);
                 viewHolder.saleShopName = (TextView)convertView.findViewById(R.id.home_sale_shopname);
                 viewHolder.saleDiscountPrice = (TextView)convertView.findViewById(R.id.home_sale_shop_discount_price);
                 viewHolder.saleOriginalPrice = (TextView)convertView.findViewById(R.id.home_sale_shop_original_price);
@@ -275,6 +277,8 @@ public class HomeFragment extends ABaseFragment{
             viewHolder.saleDiscountPrice.setText(saleList.get(position).getMinSalePrice()+"元");
             viewHolder.saleOriginalPrice.setText(saleList.get(position).getMarketPrice() + "元");
             viewHolder.saleOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            String imgUrl=ApiConstants.IMG_BASE_URL  + saleList.get(position).getImgUrl();
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
             return convertView;
         }
     }
@@ -311,6 +315,7 @@ public class HomeFragment extends ABaseFragment{
             if(convertView == null){
                 viewHolder = new ProTypeViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_protype_item,null);
+                viewHolder.imageView = (ImageView)convertView.findViewById(R.id.iv_home_protype_shop);
                 viewHolder.protypeName = (TextView)convertView.findViewById(R.id.home_protype_shopname);
                 viewHolder.protypePrice = (TextView)convertView.findViewById(R.id.home_protype_shop_price);
                 convertView.setTag(viewHolder);
@@ -320,6 +325,8 @@ public class HomeFragment extends ABaseFragment{
 
             viewHolder.protypeName.setText(mProTypeList.get(position).getProductName());
             viewHolder.protypePrice.setText(mProTypeList.get(position).getMarketPrice()+"");
+            String imgUrl=ApiConstants.IMG_BASE_URL  + mProTypeList.get(position).getImgUrl();
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
             return convertView;
         }
     }
@@ -353,12 +360,17 @@ public class HomeFragment extends ABaseFragment{
                 viewHolder = new ShopViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_shop_item,null);
                 viewHolder.shopName = (TextView)convertView.findViewById(R.id.home_shop_shopname);
+                viewHolder.imageView = (ImageView)convertView.findViewById(R.id.iv_home_shop_shop);
+                viewHolder.imageView.setMinimumWidth(parent.getHeight());
+                viewHolder.imageView.setMinimumHeight(parent.getWidth());
                 /*viewHolder.shopBusiness = (TextView)convertView.findViewById(R.id.home_shop_business);*/
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ShopViewHolder)convertView.getTag();
             }
             viewHolder.shopName.setText(mShopList.get(position).getShopName());
+            String imgUrl=ApiConstants.IMG_BASE_URL  + mShopList.get(position).getLogo();
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
             return convertView;
         }
     }
@@ -366,16 +378,19 @@ public class HomeFragment extends ABaseFragment{
     private class ShopViewHolder{
         TextView shopName ;
 //        TextView shopBusiness ;
+        ImageView imageView ;
     }
     private class ProTypeViewHolder {
         TextView protypeName ;
         TextView protypePrice ;
+        ImageView imageView ;
     }
 
     private class ViewHolder{
         TextView saleShopName ;
         TextView saleDiscountPrice ;
         TextView saleOriginalPrice ;
+        ImageView imageView ;
     }
 
 

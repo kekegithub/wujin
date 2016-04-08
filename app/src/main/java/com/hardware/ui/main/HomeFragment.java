@@ -112,7 +112,7 @@ public class HomeFragment extends ABaseFragment{
         mShopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ShopHomePageFragment.launch(getActivity(), mShopList.get(position).getId());
+                ShopHomePageFragment.launch(getActivity(), mShopList.get(position).getId(),mShopList.get(position).getLogo());
             }
         });
     }

@@ -2,7 +2,6 @@ package com.hardware.ui.shop;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
@@ -21,7 +19,6 @@ import com.hardware.tools.ToolsHelper;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
@@ -41,7 +38,8 @@ import java.util.List;
  * Created by WuYue on 2016/4/8.
  */
 public class ShopHomePageFragment extends ABaseFragment {
-    private final static String ARG_KEY = "shopId";
+    private final static String ARG_KEY_SHOP_ID = "shopId";
+    private final static String ARG_KEY_SHOP_IMG = "shopImg";
 
     private final static int SORT_ALL = 0;//全部
     private final static int SORT_BY_SALE = 1;//销售量排序
@@ -61,6 +59,7 @@ public class ShopHomePageFragment extends ABaseFragment {
     private boolean HasMoreData=true;
 
     private int mShopId;
+    private String mShopImgUrl;
     private int mTab = TAB_HOME_PAGE;
     private int shopSort=SORT_ALL;
 
@@ -115,9 +114,10 @@ public class ShopHomePageFragment extends ABaseFragment {
 
     private DisplayImageOptions options;
 
-    public static void launch(Activity from, int shopId) {
+    public static void launch(Activity from, int shopId,String shopImg) {
         FragmentArgs args = new FragmentArgs();
-        args.add(ARG_KEY, shopId);
+        args.add(ARG_KEY_SHOP_ID, shopId);
+        args.add(ARG_KEY_SHOP_IMG, shopImg);
         FragmentContainerActivity.launch(from, ShopHomePageFragment.class, args);
     }
 
@@ -172,8 +172,11 @@ public class ShopHomePageFragment extends ABaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mShopId = savedInstanceState == null ? (int) getArguments().getSerializable(ARG_KEY)
-                : (int) savedInstanceState.getSerializable(ARG_KEY);
+        mShopId = savedInstanceState == null ? (int) getArguments().getSerializable(ARG_KEY_SHOP_ID)
+                : (int) savedInstanceState.getSerializable(ARG_KEY_SHOP_ID);
+
+        mShopImgUrl= savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY_SHOP_IMG)
+                : (String) savedInstanceState.getSerializable(ARG_KEY_SHOP_IMG);
     }
 
     @Override
@@ -188,6 +191,9 @@ public class ShopHomePageFragment extends ABaseFragment {
         mInflater=inflater;
 
         options= buldDisplayImageOptions();
+
+        String imgUrl=ApiConstants.IMG_BASE_URL+mShopImgUrl;
+        ImageLoader.getInstance().displayImage(imgUrl, mShopImg,options);
 
         mGridView=mPullRefreshGridView.getRefreshableView();
         refreshViews();
@@ -279,7 +285,9 @@ public class ShopHomePageFragment extends ABaseFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(ARG_KEY, mShopId);
+        outState.putSerializable(ARG_KEY_SHOP_ID, mShopId);
+
+        outState.putSerializable(ARG_KEY_SHOP_IMG, mShopImgUrl);
     }
 
     void OnClick(View v) {

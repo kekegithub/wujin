@@ -10,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.hardware.R;
-import com.hardware.api.okhttp.OkHttpUtils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.fragment_container_rl)
     RelativeLayout fragmentContainerRl;
 
-
     private Fragment[] fragments;
     private HomeFragment homefragment;
     private GoodsFragment goodsFragment;
@@ -71,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        OkHttpUtils.getInstance().debug("OkHttpUtils",true).setConnectTimeout(100000, TimeUnit.MILLISECONDS);
         initView();
     }
 

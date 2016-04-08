@@ -1,71 +1,219 @@
 package com.hardware.ui.main;
 
-
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.SimpleAdapter;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
-import com.hardware.api.bean.home.HomeProductsCallback;
-import com.hardware.api.bean.home.HomeProductsRes;
-import com.hardware.api.okhttp.OkHttpUtils;
-import com.hardware.api.okhttp.callback.StringCallback;
+import com.hardware.bean.HomeProductsBean;
+import com.hardware.utils.Tools;
+import com.hardware.view.MyGridView;
+import com.zhan.framework.support.inject.ViewInject;
+import com.zhan.framework.ui.fragment.ABaseFragment;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Request;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends ABaseFragment {
 
+    @ViewInject(id = R.id.viewpager)
+    ViewPager mViewPager;
+    @ViewInject(id = R.id.home_gridView)
+    MyGridView mGridView ;
+    @ViewInject(id = R.id.home_special_offer_gridView)
+    MyGridView mOfferGridView ;
 
-    @Bind(R.id.http_test_btn)
-    Button httpTestBtn;
+    private ArrayList<ImageView> mImageSource;
+    private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
+    private int[] mImageIcon = { R.drawable.home_popularity_brand, R.drawable.home_user_buy,
+            R.drawable.home_spread, R.drawable.home_consult,R.drawable.home_repair,
+            R.drawable.home_build, R.drawable.home_advertise,R.drawable.home_more
+           };
+    private String[] mIconName = { "人气品牌", "用户求购", "商家推广", "行业资讯", "便民维修", "便民施工", "专业招聘", "更多"};
 
-    public HomeFragment() {
-    }
+    private ArrayList<View> mAdList;
+    private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
+    private List<HomeProductsBean.MessageEntity.RowsEntity> messageList = new ArrayList<>();
+
+    private HomePagerAdapter mHomeAdapter;
+    private SimpleAdapter mSimpleAdapter;
+    private HomeMessageAdapter messageAdapter ;
+    private int currPage = 0;
+    private int oldPage = 0;
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+    protected int inflateContentView() {
+        return R.layout.fragment_home;
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
+    protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
+        super.layoutInit(inflater, savedInstanceSate);
+        initViewPager();
+        getData();
+
+        String [] from ={"image","text"};
+        int [] to = {R.id.image,R.id.text};
+        mSimpleAdapter = new SimpleAdapter(getActivity(), mDataList, R.layout.home_gridview_item, from, to);
+        mGridView.setAdapter(mSimpleAdapter);
+
+
     }
 
-    @OnClick(R.id.http_test_btn)
-    public void onClick() {
-        OkHttpUtils
-                .post()
-                .url(ApiConstants.MOBILE_HOME_PRODUCTS_LIST)
-                .build()
-                .execute(new HomeProductsCallback() {
-                    @Override
-                    public void onError(Call call, Exception e) {
+    @Override
+    public void requestData() {
+        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, null, new BaseHttpRequestTask<HomeProductsBean>() {
+            @Override
+            public HomeProductsBean parseResponseToResult(String content) {
+                return Tools.parseJson(content, HomeProductsBean.class);
+            }
 
-                    }
+            @Override
+            protected void onSuccess(HomeProductsBean responseBean) {
+                super.onSuccess(responseBean);
+                if (responseBean != null) {
+                    messageList = responseBean.getMessage().getRows();
+                  //  mOfferGridView.setAdapter(new HomeMessageAdapter(messageList));
+                }
+            }
 
-                    @Override
-                    public void onResponse(HomeProductsRes response) {
-                        Log.i("******",response.getMessage().getTotal()+"");
-                    }
-                });
+        });
     }
 
+    private List<Map<String, Object>> getData(){
+        for(int i=0;i<mImageIcon.length;i++){
+            Map<String, Object> map = new HashMap<String, Object>();
+            map.put("image", mImageIcon[i]);
+            map.put("text", mIconName[i]);
+            mDataList.add(map);
+        }
+        return mDataList;
+    }
+
+
+    private void initViewPager() {
+        mImageSource = new ArrayList<ImageView>();
+        for (int i = 0; i < mImages.length; i++) {
+            ImageView image = new ImageView(getActivity());
+            image.setBackgroundResource(mImages[i]);
+            mImageSource.add(image);
+        }
+
+        mAdList = new ArrayList<View>();
+        mAdList.add(findViewById(R.id.dot1));
+        mAdList.add(findViewById(R.id.dot2));
+        mAdList.add(findViewById(R.id.dot3));
+
+        mHomeAdapter = new HomePagerAdapter();
+        mViewPager.setAdapter(mHomeAdapter);
+        MyPageChangeListener listener = new MyPageChangeListener();
+        mViewPager.setOnPageChangeListener(listener);
+
+        ScheduledExecutorService scheduled = Executors.newSingleThreadScheduledExecutor();
+        ViewPagerTask pagerTask = new ViewPagerTask();
+        scheduled.scheduleAtFixedRate(pagerTask, 2, 2, TimeUnit.SECONDS);
+    }
+
+    private class HomePagerAdapter extends PagerAdapter {
+        @Override
+        public int getCount() {
+            return mImages.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object) {
+            container.removeView(mImageSource.get(position));
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            container.addView(mImageSource.get(position));
+            return mImageSource.get(position);
+        }
+    }
+
+    private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
+        @Override
+        public void onPageScrollStateChanged(int arg0) {
+        }
+
+        @Override
+        public void onPageScrolled(int arg0, float arg1, int arg2) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mAdList.get(position).setBackgroundResource(R.drawable.dot_focused);
+            mAdList.get(oldPage).setBackgroundResource(R.drawable.dot_normal);
+            oldPage = position;
+            currPage = position;
+        }
+    }
+
+    private class ViewPagerTask implements Runnable {
+        @Override
+        public void run() {
+            currPage = (currPage + 1) % mImages.length;
+            handler.sendEmptyMessage(0);
+        }
+    }
+
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            mViewPager.setCurrentItem(currPage);
+        }
+    };
+
+    private class HomeMessageAdapter extends BaseAdapter{
+
+        private List<HomeProductsBean.MessageEntity.RowsEntity> messageList = new ArrayList<>();
+        public HomeMessageAdapter(List<HomeProductsBean.MessageEntity.RowsEntity> messageList) {
+            this.messageList = messageList ;
+        }
+
+        @Override
+        public int getCount() {
+            return messageList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return messageList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+
+            return null;
+        }
+    }
 
 }

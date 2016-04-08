@@ -5,19 +5,17 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
-import com.hardware.utils.Tools;
+import com.hardware.tools.ToolsHelper;
 import com.hardware.view.MyGridView;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
@@ -38,7 +36,7 @@ public class HomeFragment extends ABaseFragment {
     @ViewInject(id = R.id.home_gridView)
     MyGridView mGridView ;
     @ViewInject(id = R.id.home_special_offer_gridView)
-    MyGridView mOfferGridView ;
+    MyGridView mSaleGridView ;
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -50,11 +48,13 @@ public class HomeFragment extends ABaseFragment {
 
     private ArrayList<View> mAdList;
     private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
-    private List<HomeProductsBean.MessageEntity.RowsEntity> messageList = new ArrayList<>();
+    private List<HomeProductsBean.MessageEntity.RowsEntity> mSaleList = new ArrayList<>();//折扣特卖
+    private List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList = new ArrayList<>();//热销单品
+
 
     private HomePagerAdapter mHomeAdapter;
     private SimpleAdapter mSimpleAdapter;
-    private HomeMessageAdapter messageAdapter ;
+    private HomeSaleAdapter mSaleAdapter ;
     private int currPage = 0;
     private int oldPage = 0;
 
@@ -83,15 +83,16 @@ public class HomeFragment extends ABaseFragment {
         startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, null, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {
-                return Tools.parseJson(content, HomeProductsBean.class);
+                return ToolsHelper.parseJson(content, HomeProductsBean.class);
             }
 
             @Override
             protected void onSuccess(HomeProductsBean responseBean) {
                 super.onSuccess(responseBean);
                 if (responseBean != null) {
-                    messageList = responseBean.getMessage().getRows();
-                  //  mOfferGridView.setAdapter(new HomeMessageAdapter(messageList));
+                    mSaleList = responseBean.getMessage().getRows();
+                    mProTypeList = responseBean.getProType().getRows();
+                    mSaleGridView.setAdapter(new HomeSaleAdapter(mSaleList));
                 }
             }
 
@@ -187,21 +188,21 @@ public class HomeFragment extends ABaseFragment {
         }
     };
 
-    private class HomeMessageAdapter extends BaseAdapter{
+    private class HomeSaleAdapter extends BaseAdapter{
 
-        private List<HomeProductsBean.MessageEntity.RowsEntity> messageList = new ArrayList<>();
-        public HomeMessageAdapter(List<HomeProductsBean.MessageEntity.RowsEntity> messageList) {
-            this.messageList = messageList ;
+        private List<HomeProductsBean.MessageEntity.RowsEntity> saleList = new ArrayList<>();
+        public HomeSaleAdapter(List<HomeProductsBean.MessageEntity.RowsEntity> saleList) {
+            this.saleList = saleList ;
         }
 
         @Override
         public int getCount() {
-            return messageList.size();
+            return saleList.size();
         }
 
         @Override
         public Object getItem(int position) {
-            return messageList.get(position);
+            return saleList.get(position);
         }
 
         @Override
@@ -211,9 +212,20 @@ public class HomeFragment extends ABaseFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-
-            return null;
+            ViewHolder viewHolder;
+            if(convertView == null){
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_sale_item,null);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ViewHolder)convertView.getTag();
+            }
+            return convertView;
         }
+    }
+
+    static class ViewHolder{
+
     }
 
 }

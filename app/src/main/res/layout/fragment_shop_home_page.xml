@@ -14,6 +14,7 @@
             android:id="@+id/shopImg"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:src="@drawable/ic_launcher"
             android:layout_marginRight="8dp" />
 
         <TextView
@@ -85,6 +86,7 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
+        android:orientation="horizontal"
         android:layout_height="wrap_content">
 
         <TextView
@@ -94,9 +96,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_dark_blue_underline"
             android:gravity="center"
-            android:minHeight="32dp"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:minHeight="50dp"
             android:text="店铺首页"
             android:textColor="@color/blue"
             android:textSize="@dimen/body_text" />
@@ -108,9 +108,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white_small"
             android:gravity="center"
-            android:minHeight="32dp"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:minHeight="50dp"
             android:text="全部商品"
             android:textColor="@color/text_color"
             android:textSize="@dimen/body_text" />
@@ -122,13 +120,37 @@
             android:layout_weight="1"
             android:background="@drawable/bg_white_small"
             android:gravity="center"
-            android:minHeight="32dp"
-            android:paddingBottom="16dp"
-            android:paddingTop="16dp"
+            android:minHeight="50dp"
             android:text="新品上架"
             android:textColor="@color/text_color"
             android:textSize="@dimen/body_text" />
     </LinearLayout>
+
+    <!--<GridView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/productsGridview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        />-->
+
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/productsGridview"
+        android:layout_height="fill_parent"
+        android:layout_width="fill_parent"
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="10dp"
+        android:stretchMode="columnWidth"
+        android:gravity="center"
+        ptr:ptrMode="both"
+         />
+    <!--ptr:ptrDrawable="@drawable/android"-->
+
 </LinearLayout>
 
 

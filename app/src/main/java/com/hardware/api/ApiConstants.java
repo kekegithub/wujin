@@ -10,4 +10,7 @@ public class ApiConstants {
 
     //店铺基本
     public static final String SHOP_BASICALLY ="common/aplHome/shopBasically";
+
+    //店铺产品
+    public static final String SHOP_PRODUCTS_LIST ="common/aplHome/shopProductsList";
 }

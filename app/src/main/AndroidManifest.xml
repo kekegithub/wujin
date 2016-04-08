@@ -27,7 +27,7 @@
         <activity
             android:name="com.zhan.framework.component.container.FragmentContainerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/OverlayTheme"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan"
             />
 

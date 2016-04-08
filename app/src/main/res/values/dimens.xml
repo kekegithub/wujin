@@ -7,13 +7,13 @@
     <dimen name="min_item_height">48dp</dimen>
 
     <!--标题字体 -->
-    <dimen name="title">32dp</dimen>
+    <dimen name="title">20dp</dimen>
     <!--副标题字体 -->
-    <dimen name="sub_title">30dp</dimen>
+    <dimen name="sub_title">18dp</dimen>
     <!--正文字体 -->
-    <dimen name="body_text">28dp</dimen>
+    <dimen name="body_text">16dp</dimen>
     <!--正文小字体 -->
-    <dimen name="body_text_small">24dp</dimen>
+    <dimen name="body_text_small">14dp</dimen>
     <!--注释字体 -->
-    <dimen name="notes">20dp</dimen>
+    <dimen name="notes">14dp</dimen>
 </resources>

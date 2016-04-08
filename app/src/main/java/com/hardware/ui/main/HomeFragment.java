@@ -1,5 +1,6 @@
 package com.hardware.ui.main;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,17 +9,24 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
+import com.hardware.bean.ProductContent;
+import com.hardware.ui.products.ProductsDetailFragment;
+import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
+import com.hardware.view.HorizontalListView;
 import com.hardware.view.MyGridView;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
+import com.zhan.framework.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +37,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 
-public class HomeFragment extends ABaseFragment {
+public class HomeFragment extends ABaseFragment{
 
     @ViewInject(id = R.id.viewpager)
     ViewPager mViewPager;
@@ -37,6 +45,12 @@ public class HomeFragment extends ABaseFragment {
     MyGridView mGridView ;
     @ViewInject(id = R.id.home_special_offer_gridView)
     MyGridView mSaleGridView ;
+    @ViewInject(id = R.id.home_protype_gridview)
+    MyGridView mProTypeGridView ;
+    @ViewInject(id = R.id.home_horizon_listview)
+    HorizontalListView mShopListView ;
+   /* @ViewInject(idStr = "sale_more", click = "OnClick")
+    View viewSaleMore;//更多折扣*/
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -50,11 +64,12 @@ public class HomeFragment extends ABaseFragment {
     private List<Map<String, Object>> mDataList = new ArrayList<Map<String, Object>>();
     private List<HomeProductsBean.MessageEntity.RowsEntity> mSaleList = new ArrayList<>();//折扣特卖
     private List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList = new ArrayList<>();//热销单品
-
+    private List<HomeProductsBean.ShopsEntity.RowsEntity> mShopList = new ArrayList<>();//人气店铺
 
     private HomePagerAdapter mHomeAdapter;
     private SimpleAdapter mSimpleAdapter;
     private HomeSaleAdapter mSaleAdapter ;
+    private HorizontalListViewAdapter mShopAdapter ;
     private int currPage = 0;
     private int oldPage = 0;
 
@@ -75,7 +90,30 @@ public class HomeFragment extends ABaseFragment {
         mSimpleAdapter = new SimpleAdapter(getActivity(), mDataList, R.layout.home_gridview_item, from, to);
         mGridView.setAdapter(mSimpleAdapter);
 
+        mSaleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                int priductId = mSaleList.get(position).getId() ;
+                String district = "江苏省南通市启东市";
+                ProductContent content = new ProductContent();
+                content.setId(priductId);
+                content.setDistrict(district);
+                ProductsDetailFragment.launch(getActivity(), content);
+            }
+        });
+        mProTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ToastUtils.toast(mProTypeList.get(position).getId() + "");
 
+            }
+        });
+        mShopListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ShopHomePageFragment.launch(getActivity(), mShopList.get(position).getId());
+            }
+        });
     }
 
     @Override
@@ -92,7 +130,10 @@ public class HomeFragment extends ABaseFragment {
                 if (responseBean != null) {
                     mSaleList = responseBean.getMessage().getRows();
                     mProTypeList = responseBean.getProType().getRows();
+                    mShopList = responseBean.getShops().getRows();
                     mSaleGridView.setAdapter(new HomeSaleAdapter(mSaleList));
+                    mProTypeGridView.setAdapter(new HomeProTypeAdapter(mProTypeList));
+                    mShopListView.setAdapter(new HorizontalListViewAdapter(mShopList));
                 }
             }
 
@@ -132,6 +173,7 @@ public class HomeFragment extends ABaseFragment {
         ViewPagerTask pagerTask = new ViewPagerTask();
         scheduled.scheduleAtFixedRate(pagerTask, 2, 2, TimeUnit.SECONDS);
     }
+
 
     private class HomePagerAdapter extends PagerAdapter {
         @Override
@@ -197,7 +239,12 @@ public class HomeFragment extends ABaseFragment {
 
         @Override
         public int getCount() {
-            return saleList.size();
+            if(saleList.size() > 6){
+                return 6;
+            }else{
+                return saleList.size();
+            }
+
         }
 
         @Override
@@ -216,17 +263,127 @@ public class HomeFragment extends ABaseFragment {
             if(convertView == null){
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_sale_item,null);
-                viewHolder.
+                viewHolder.saleShopName = (TextView)convertView.findViewById(R.id.home_sale_shopname);
+                viewHolder.saleDiscountPrice = (TextView)convertView.findViewById(R.id.home_sale_shop_discount_price);
+                viewHolder.saleOriginalPrice = (TextView)convertView.findViewById(R.id.home_sale_shop_original_price);
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ViewHolder)convertView.getTag();
             }
+
+            viewHolder.saleShopName.setText(saleList.get(position).getProductName());
+            viewHolder.saleDiscountPrice.setText(saleList.get(position).getMinSalePrice()+"元");
+            viewHolder.saleOriginalPrice.setText(saleList.get(position).getMarketPrice() + "元");
+            viewHolder.saleOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             return convertView;
         }
     }
 
-    static class ViewHolder{
-        TextView
+
+    private class HomeProTypeAdapter extends BaseAdapter {
+        private List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList = new ArrayList<>();
+        public HomeProTypeAdapter(List<HomeProductsBean.ProTypeEntity.RowsEntity> mProTypeList) {
+            this.mProTypeList = mProTypeList ;
+        }
+
+        @Override
+        public int getCount() {
+            if(mProTypeList.size() > 6){
+                return 6;
+            }else{
+                return mProTypeList.size();
+            }
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mProTypeList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ProTypeViewHolder viewHolder;
+            if(convertView == null){
+                viewHolder = new ProTypeViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_protype_item,null);
+                viewHolder.protypeName = (TextView)convertView.findViewById(R.id.home_protype_shopname);
+                viewHolder.protypePrice = (TextView)convertView.findViewById(R.id.home_protype_shop_price);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ProTypeViewHolder)convertView.getTag();
+            }
+
+            viewHolder.protypeName.setText(mProTypeList.get(position).getProductName());
+            viewHolder.protypePrice.setText(mProTypeList.get(position).getMarketPrice()+"");
+            return convertView;
+        }
     }
 
+    private class HorizontalListViewAdapter extends BaseAdapter{
+
+        private List<HomeProductsBean.ShopsEntity.RowsEntity> mShopList = new ArrayList<>();
+        public HorizontalListViewAdapter(List<HomeProductsBean.ShopsEntity.RowsEntity> mShopList) {
+            this.mShopList = mShopList ;
+        }
+
+        @Override
+        public int getCount() {
+            return mShopList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mShopList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ShopViewHolder viewHolder;
+            if(convertView == null){
+                viewHolder = new ShopViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_shop_item,null);
+                viewHolder.shopName = (TextView)convertView.findViewById(R.id.home_shop_shopname);
+                /*viewHolder.shopBusiness = (TextView)convertView.findViewById(R.id.home_shop_business);*/
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ShopViewHolder)convertView.getTag();
+            }
+            viewHolder.shopName.setText(mShopList.get(position).getShopName());
+            return convertView;
+        }
+    }
+
+    private class ShopViewHolder{
+        TextView shopName ;
+//        TextView shopBusiness ;
+    }
+    private class ProTypeViewHolder {
+        TextView protypeName ;
+        TextView protypePrice ;
+    }
+
+    private class ViewHolder{
+        TextView saleShopName ;
+        TextView saleDiscountPrice ;
+        TextView saleOriginalPrice ;
+    }
+
+
+/*    void OnClick(View v) {
+        switch (v.getId()) {
+            case R.id.sale_more:
+                ShopHomePageFragment.launch(getActivity(), 262);
+                break;
+        }
+    }*/
 }

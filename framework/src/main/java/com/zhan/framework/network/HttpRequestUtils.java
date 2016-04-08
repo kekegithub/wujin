@@ -46,7 +46,9 @@ public class HttpRequestUtils {
         Log.i(TAG, "requestUrl = " + requestUrl);
         Log.i(TAG, "requestType = " + requestType);
 
-        requestCallback.onPrepare();
+        if (requestCallback != null) {
+            requestCallback.onPrepare();
+        }
 
         if (!Connectivity.isConnected(context)) {
             if (requestCallback != null) {

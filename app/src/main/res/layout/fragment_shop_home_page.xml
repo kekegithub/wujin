@@ -1,0 +1,82 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorMain"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp">
+
+        <ImageView
+            android:id="@+id/shopImg"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginRight="8dp" />
+
+        <TextView
+            android:id="@+id/shop_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/shopImg"
+            android:layout_toRightOf="@id/shopImg"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/shop_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shop_name"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/shopImg"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/shop_grade"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/shop_name"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/shop_age"
+            android:background="@drawable/bg_half_circle_dark_blue"
+            android:textColor="@color/colorSub"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/collect_shop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_toLeftOf="@id/collect_shop"
+            android:background="@color/white" />
+
+        <TextView
+            android:id="@+id/shop_fans"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/divider"
+            android:textColor="@color/white"
+            android:textSize="@dimen/title" />
+    </RelativeLayout>
+
+</LinearLayout>
+
+
+
+

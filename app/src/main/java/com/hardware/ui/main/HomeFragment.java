@@ -216,6 +216,7 @@ public class HomeFragment extends ABaseFragment {
             if(convertView == null){
                 viewHolder = new ViewHolder();
                 convertView = LayoutInflater.from(getActivity()).inflate(R.layout.home_sale_item,null);
+                viewHolder.
                 convertView.setTag(viewHolder);
             }else{
                 viewHolder = (ViewHolder)convertView.getTag();
@@ -225,7 +226,7 @@ public class HomeFragment extends ABaseFragment {
     }
 
     static class ViewHolder{
-
+        TextView
     }
 
 }

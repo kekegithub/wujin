@@ -45,13 +45,21 @@ public class ShopHomePageFragment extends ABaseFragment {
     private final static int SORT_BY_PRICE = 2;//价格排序
     private final static int SORT_BY_NEW = 3;//最新产品
 
+    private final static int TAB_HOME_PAGE = 0;//首页
+    private final static int TAB_COMPREHENSIVE = 1;//综合
+    private final static int TAB_NEW_PRODUCTS = 2;//新品
+    private final static int TAB_SALE_NUM = 3;//销量
+    private final static int TAB_PRICE = 4;//价格
+    private final static int TAB_NEW_ARRIVAL = 5;//新品上架
+
     private final static int PAGE_SIZE=10;
 
     private boolean QueryMore=false;
     private boolean HasMoreData=true;
 
     private int mShopId;
-    private int shopSort = SORT_ALL;
+    private int mTab = TAB_HOME_PAGE;
+    private int shopSort=SORT_ALL;
 
     @ViewInject(id = R.id.shopImg)
     private ImageView mShopImg;
@@ -66,12 +74,24 @@ public class ShopHomePageFragment extends ABaseFragment {
     @ViewInject(id = R.id.shop_fans)
     private TextView mShopFans;
 
-    @ViewInject(id = R.id.shop_home_page , click = "OnClick")
+    @ViewInject(id = R.id.shop_home_page, click = "OnClick")
     private TextView mShopHomePage;
-    @ViewInject(id = R.id.all_products , click = "OnClick")
+    @ViewInject(id = R.id.all_products, click = "OnClick")
     private TextView mAllProducts;
-    @ViewInject(id = R.id.new_products , click = "OnClick")
+    @ViewInject(id = R.id.new_products, click = "OnClick")
     private TextView mNewProducts;
+
+    @ViewInject(id = R.id.content_all_sub)
+    private View mAllSubView;
+
+    @ViewInject(id = R.id.comprehensive, click = "OnClick")
+    private TextView comprehensive;
+    @ViewInject(id = R.id.new_products_sub, click = "OnClick")
+    private TextView newProductsSub;
+    @ViewInject(id = R.id.sale_num, click = "OnClick")
+    private TextView sortBySaleNum;
+    @ViewInject(id = R.id.price, click = "OnClick")
+    private TextView sortByPrice;
 
     @ViewInject(id = R.id.productsGridview)
     private PullToRefreshGridView mPullRefreshGridView;
@@ -162,16 +182,16 @@ public class ShopHomePageFragment extends ABaseFragment {
 
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<GridView> refreshView) {
-                /*Toast.makeText(PullToRefreshGridActivity.this, "Pull Down!", Toast.LENGTH_SHORT).show();
-                new GetDataTask().execute();*/
                 QueryMore=false;
                 requestData();
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<GridView> refreshView) {
-                /*Toast.makeText(PullToRefreshGridActivity.this, "Pull Up!", Toast.LENGTH_SHORT).show();
-                new GetDataTask().execute();*/
+                if(!HasMoreData){
+                    mPullRefreshGridView.onRefreshComplete();
+                    return;
+                }
                 QueryMore=true;
                 requestData();
             }
@@ -202,7 +222,7 @@ public class ShopHomePageFragment extends ABaseFragment {
                             mShopGrade.setText(response.getShops().getGradName());
                             mShopFans.setText(response.getShops().getAttention() + "\n粉丝");
 
-                            List<Product> tempProducts=new LinkedList<>();
+                            List<Product> tempProducts = new LinkedList<>();
                             for (ShopProductsListResponse.MessageEntity messageEntity : response.getMessage()) {
                                 Product product = new Product();
                                 product.setId(messageEntity.getId());
@@ -213,15 +233,19 @@ public class ShopHomePageFragment extends ABaseFragment {
                                 tempProducts.add(product);
                             }
 
-                            if (tempProducts.size()==PAGE_SIZE) {
-                                HasMoreData=true;
+                            if (tempProducts.size() == PAGE_SIZE) {
+                                HasMoreData = true;
                             } else {
-                                HasMoreData=false;
+                                HasMoreData = false;
                             }
 
                             mProducts.addAll(tempProducts);
 
                             mAdpater.notifyDataSetChanged();
+
+                            if (!QueryMore && mProducts.size() > 0) {
+                                mGridView.setSelection(0);
+                            }
                         }
 
                         break;
@@ -246,30 +270,45 @@ public class ShopHomePageFragment extends ABaseFragment {
     void OnClick(View v) {
         switch (v.getId()) {
             case R.id.shop_home_page:
-                if(shopSort!=SORT_ALL){
-                    shopSort=SORT_ALL;
-                    refreshViews();
-                    QueryMore=false;
-                    HasMoreData=true;
-                    requestData();
+                if(mTab!=TAB_HOME_PAGE){
+                    mTab=TAB_HOME_PAGE;
+                    autoRefresh();
                 }
                 break;
             case R.id.all_products:
-                if(shopSort!=SORT_BY_SALE){
-                    shopSort=SORT_BY_SALE;
-                    refreshViews();
-                    QueryMore=false;
-                    HasMoreData=true;
-                    requestData();
+                if(mTab!=TAB_COMPREHENSIVE){
+                    mTab=TAB_COMPREHENSIVE;
+                    autoRefresh();
                 }
                 break;
             case R.id.new_products:
-                if(shopSort!=SORT_BY_NEW){
-                    shopSort=SORT_BY_NEW;
-                    refreshViews();
-                    QueryMore=false;
-                    HasMoreData=true;
-                    requestData();
+                if(mTab!=TAB_NEW_ARRIVAL){
+                    mTab=TAB_NEW_ARRIVAL;
+                    autoRefresh();
+                }
+                break;
+            case R.id.comprehensive:
+                if(mTab!=TAB_COMPREHENSIVE){
+                    mTab=TAB_COMPREHENSIVE;
+                    autoRefresh();
+                }
+                break;
+            case R.id.new_products_sub:
+                if(mTab!=TAB_NEW_PRODUCTS){
+                    mTab=TAB_NEW_PRODUCTS;
+                    autoRefresh();
+                }
+                break;
+            case R.id.sale_num:
+                if(mTab!=TAB_SALE_NUM){
+                    mTab=TAB_SALE_NUM;
+                    autoRefresh();
+                }
+                break;
+            case R.id.price:
+                if(mTab!=TAB_PRICE){
+                    mTab=TAB_PRICE;
+                    autoRefresh();
                 }
                 break;
             case R.id.collect_shop:
@@ -277,27 +316,78 @@ public class ShopHomePageFragment extends ABaseFragment {
         }
     }
 
+    private void autoRefresh(){
+        refreshViews();
+        QueryMore=false;
+        HasMoreData=true;
+        mPullRefreshGridView.setRefreshing();
+    }
+
     private void refreshViews(){
-        switch (shopSort){
-            case SORT_ALL:
+        switch (mTab){
+            case TAB_HOME_PAGE :
                 setTabSelected(mShopHomePage,true,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
                 setTabSelected(mAllProducts,false,R.drawable.all_products_selected,R.drawable.all_products_normal);
                 setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
+                mAllSubView.setVisibility(View.GONE);
+                shopSort=SORT_ALL;
                 break;
-            case SORT_BY_SALE:
-                setTabSelected(mShopHomePage,false,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
+            case TAB_COMPREHENSIVE :
+                mAllSubView.setVisibility(View.VISIBLE);
+                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
                 setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
                 setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
+
+                setTabSelected(comprehensive,true,0,0);
+                setTabSelected(newProductsSub,false,0,0);
+                setTabSelected(sortBySaleNum,false,0,0);
+                setTabSelected(sortByPrice,false,0,0);
+                shopSort=SORT_ALL;
                 break;
-            case SORT_BY_PRICE:
-                setTabSelected(mShopHomePage,false,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
+            case TAB_NEW_PRODUCTS :
+                mAllSubView.setVisibility(View.VISIBLE);
+                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
                 setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
                 setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
+
+                setTabSelected(comprehensive, false, 0, 0);
+                setTabSelected(newProductsSub,true,0,0);
+                setTabSelected(sortBySaleNum,false,0,0);
+                setTabSelected(sortByPrice,false,0,0);
+                shopSort=SORT_BY_NEW;
                 break;
-            case SORT_BY_NEW:
+            case TAB_SALE_NUM :
+                mAllSubView.setVisibility(View.VISIBLE);
+                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
+                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
+                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
+
+                setTabSelected(comprehensive, false, 0, 0);
+                setTabSelected(newProductsSub,false,0,0);
+                setTabSelected(sortBySaleNum,true,0,0);
+                setTabSelected(sortByPrice,false,0,0);
+                shopSort=SORT_BY_SALE;
+                break;
+            case TAB_PRICE  :
+                mAllSubView.setVisibility(View.VISIBLE);
+                setTabSelected(mShopHomePage, false, R.drawable.shop_home_sellected, R.drawable.shop_home_normal);
+                setTabSelected(mAllProducts,true,R.drawable.all_products_selected,R.drawable.all_products_normal);
+                setTabSelected(mNewProducts,false,R.drawable.new_products_selected,R.drawable.new_products_normal);
+
+                setTabSelected(comprehensive, false, 0, 0);
+                setTabSelected(newProductsSub,false,0,0);
+                setTabSelected(sortBySaleNum,false,0,0);
+                setTabSelected(sortByPrice,true,0,0);
+
+                shopSort=SORT_BY_PRICE;
+                break;
+            case TAB_NEW_ARRIVAL  :
                 setTabSelected(mShopHomePage,false,R.drawable.shop_home_sellected,R.drawable.shop_home_normal);
                 setTabSelected(mAllProducts,false,R.drawable.all_products_selected,R.drawable.all_products_normal);
                 setTabSelected(mNewProducts,true,R.drawable.new_products_selected,R.drawable.new_products_normal);
+                mAllSubView.setVisibility(View.GONE);
+
+                shopSort=SORT_BY_NEW;
                 break;
         }
     }
@@ -388,6 +478,9 @@ public class ShopHomePageFragment extends ABaseFragment {
     }
 
     private int getNextPage(){
+        if(!QueryMore){
+            return 1;
+        }
         int pageIndex=1+mProducts.size()/PAGE_SIZE;
         return pageIndex;
     }

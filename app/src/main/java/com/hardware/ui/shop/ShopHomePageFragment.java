@@ -19,6 +19,9 @@ import com.hardware.api.ApiConstants;
 import com.hardware.bean.ShopProductsListResponse;
 import com.hardware.tools.ToolsHelper;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
@@ -93,6 +96,13 @@ public class ShopHomePageFragment extends ABaseFragment {
     @ViewInject(id = R.id.price, click = "OnClick")
     private TextView sortByPrice;
 
+    @ViewInject(id = R.id.products_type, click = "OnClick")
+    private TextView productsType;
+
+    @ViewInject(id = R.id.company_info, click = "OnClick")
+    private TextView companyInfo;
+
+
     @ViewInject(id = R.id.productsGridview)
     private PullToRefreshGridView mPullRefreshGridView;
 
@@ -102,6 +112,8 @@ public class ShopHomePageFragment extends ABaseFragment {
 
     private LayoutInflater mInflater;
     private ProductAdapter mAdpater=new ProductAdapter();
+
+    private DisplayImageOptions options;
 
     public static void launch(Activity from, int shopId) {
         FragmentArgs args = new FragmentArgs();
@@ -174,6 +186,9 @@ public class ShopHomePageFragment extends ABaseFragment {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle("店铺首页");
         mInflater=inflater;
+
+        options= buldDisplayImageOptions();
+
         mGridView=mPullRefreshGridView.getRefreshableView();
         refreshViews();
         mPullRefreshGridView.setAdapter(mAdpater);
@@ -313,6 +328,10 @@ public class ShopHomePageFragment extends ABaseFragment {
                 break;
             case R.id.collect_shop:
                 break;
+            case R.id.products_type:
+                break;
+            case R.id.company_info:
+                break;
         }
     }
 
@@ -445,7 +464,10 @@ public class ShopHomePageFragment extends ABaseFragment {
             DecimalFormat df = new DecimalFormat();
             df.applyPattern("￥ ###.00");
             holer.price.setText(df.format(product.getMarketPrice()));
-            holer.salseNum.setText(String.format("成交%d笔",product.getSaleCounts()));
+            holer.salseNum.setText(String.format("成交%d笔", product.getSaleCounts()));
+            String imgUrl=ApiConstants.IMG_BASE_URL+product.getImgUrl();
+            ImageLoader.getInstance().displayImage(imgUrl, holer.image,options);
+
             return convertView;
         }
     }
@@ -484,4 +506,17 @@ public class ShopHomePageFragment extends ABaseFragment {
         int pageIndex=1+mProducts.size()/PAGE_SIZE;
         return pageIndex;
     }
+
+    public DisplayImageOptions buldDisplayImageOptions(){
+        return new DisplayImageOptions.Builder()
+                .showImageOnLoading(R.drawable.ic_launcher)
+                .showImageForEmptyUri(R.drawable.ic_launcher)
+                .showImageOnFail(R.drawable.ic_launcher)
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true)
+                /*.displayer(new RoundedBitmapDisplayer(20))//是否设置为圆角，弧度为多少*/
+                .build();
+    }
+
 }

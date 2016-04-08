@@ -6,8 +6,12 @@ import android.view.LayoutInflater;
 
 import com.hardware.R;
 import com.hardware.bean.ProductContent;
+import com.hardware.view.McoyProductContentPage;
+import com.hardware.view.McoyProductDetailInfoPage;
+import com.hardware.view.McoySnapPageLayout;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
+import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
 /**
@@ -17,9 +21,14 @@ public class ProductsDetailFragment extends ABaseFragment{
 
     private final static String ARG_KEY = "productsId";
 
+    @ViewInject(id = R.id.flipLayout)
+    McoySnapPageLayout mFlipLayout ;
+
     private ProductContent content;
     private int id ;
     private String district ;
+    private McoyProductDetailInfoPage mTopPage = null ;
+    private McoyProductContentPage mBottomPage = null ;
 
     @Override
     protected int inflateContentView() {
@@ -29,7 +38,7 @@ public class ProductsDetailFragment extends ABaseFragment{
     public static void launch(FragmentActivity activity, ProductContent content) {
         FragmentArgs args = new FragmentArgs();
         args.add(ARG_KEY, content);
-        FragmentContainerActivity.launch(activity, ProductsDetailFragment.class, args);
+        FragmentContainerActivity.launch(activity, ProductsDetailFragment.class, args, false);
     }
 
     @Override
@@ -48,8 +57,16 @@ public class ProductsDetailFragment extends ABaseFragment{
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
-        getActivity().setTitle("商品详情");
         id = content.getId();
         district = content.getDistrict();
+
+        mTopPage =  new McoyProductDetailInfoPage(getActivity(),inflater.inflate(R.layout.products_detail_detail_layout, null));
+        mBottomPage = new McoyProductContentPage(getActivity(),inflater.inflate(R.layout.products_detail_content_page, null));
+        mFlipLayout.setSnapPages(mTopPage, mBottomPage);
+    }
+
+    @Override
+    public void requestData() {
+
     }
 }

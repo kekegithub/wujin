@@ -17,6 +17,7 @@ import android.widget.SimpleAdapter;
 import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
+import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.utils.Tools;
 import com.hardware.view.MyGridView;
 import com.zhan.framework.support.inject.ViewInject;
@@ -39,6 +40,9 @@ public class HomeFragment extends ABaseFragment {
     MyGridView mGridView ;
     @ViewInject(id = R.id.home_special_offer_gridView)
     MyGridView mOfferGridView ;
+
+    @ViewInject(idStr = "sale_more", click = "OnClick")
+    View viewSaleMore;//更多折扣
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -213,6 +217,14 @@ public class HomeFragment extends ABaseFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             return null;
+        }
+    }
+
+    void OnClick(View v) {
+        switch (v.getId()) {
+            case R.id.sale_more:
+                ShopHomePageFragment.launch(getActivity(),262);
+                break;
         }
     }
 

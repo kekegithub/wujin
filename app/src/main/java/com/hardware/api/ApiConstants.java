@@ -7,4 +7,7 @@ public class ApiConstants {
     public static final String BASE_URL = "http://121.43.111.133:50013/";
 
     public static final String MOBILE_HOME_PRODUCTS_LIST ="common/aplHome/mobilehomeproductsList";
+
+    //店铺基本
+    public static final String SHOP_BASICALLY ="common/aplHome/shopBasically";
 }

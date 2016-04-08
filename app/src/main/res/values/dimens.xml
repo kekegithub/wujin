@@ -5,4 +5,15 @@
     <dimen name="fab_margin">16dp</dimen>
 
     <dimen name="min_item_height">48dp</dimen>
+
+    <!--标题字体 -->
+    <dimen name="title">32dp</dimen>
+    <!--副标题字体 -->
+    <dimen name="sub_title">30dp</dimen>
+    <!--正文字体 -->
+    <dimen name="body_text">28dp</dimen>
+    <!--正文小字体 -->
+    <dimen name="body_text_small">24dp</dimen>
+    <!--注释字体 -->
+    <dimen name="notes">20dp</dimen>
 </resources>

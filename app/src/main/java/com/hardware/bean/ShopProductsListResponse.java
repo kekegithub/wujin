@@ -110,7 +110,7 @@ public class ShopProductsListResponse {
         private String imgUrl;
         private String name;
         private int SaleCounts;
-        private int MarketPrice;
+        private float MarketPrice;
 
         public int getId() {
             return Id;
@@ -144,11 +144,11 @@ public class ShopProductsListResponse {
             this.SaleCounts = SaleCounts;
         }
 
-        public int getMarketPrice() {
+        public float getMarketPrice() {
             return MarketPrice;
         }
 
-        public void setMarketPrice(int MarketPrice) {
+        public void setMarketPrice(float MarketPrice) {
             this.MarketPrice = MarketPrice;
         }
     }

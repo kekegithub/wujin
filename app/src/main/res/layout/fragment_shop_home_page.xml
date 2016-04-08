@@ -14,8 +14,8 @@
             android:id="@+id/shopImg"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_launcher"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_launcher" />
 
         <TextView
             android:id="@+id/shop_name"
@@ -86,8 +86,8 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <TextView
             android:id="@+id/shop_home_page"
@@ -126,30 +126,117 @@
             android:textSize="@dimen/body_text" />
     </LinearLayout>
 
-    <!--<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/productsGridview"
+    <LinearLayout
+        android:id="@+id/content_all_sub"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:numColumns="2"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
-        android:gravity="center"
-        />-->
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-    <com.handmark.pulltorefresh.library.PullToRefreshGridView
-        xmlns:ptr="http://schemas.android.com/apk/res-auto"
+        <TextView
+            android:id="@+id/comprehensive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_dark_blue_underline"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="综合"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/body_text" />
+
+        <TextView
+            android:id="@+id/new_products_sub"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_small"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="新品"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+
+        <TextView
+            android:id="@+id/sale_num"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_small"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="销量"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+
+        <TextView
+            android:id="@+id/price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bg_white_small"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:paddingBottom="16dp"
+            android:paddingTop="16dp"
+            android:text="价格"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/body_text" />
+    </LinearLayout>
+
+    <com.handmark.pulltorefresh.library.PullToRefreshGridView xmlns:ptr="http://schemas.android.com/apk/res-auto"
         android:id="@+id/productsGridview"
-        android:layout_height="fill_parent"
         android:layout_width="fill_parent"
-        android:numColumns="2"
-        android:verticalSpacing="10dp"
-        android:horizontalSpacing="10dp"
-        android:stretchMode="columnWidth"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center"
-        ptr:ptrMode="both"
-         />
+        android:horizontalSpacing="10dp"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp"
+        ptr:ptrMode="both" />
     <!--ptr:ptrDrawable="@drawable/android"-->
+    <View
+        android:id="@+id/divider_view"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d6d6d6" />
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:divider="?android:attr/listDivider"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <TextView
+            android:id="@+id/products_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="50dp"
+            android:text="商品分类"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/title" />
+
+        <TextView
+            android:id="@+id/company_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:minHeight="50dp"
+            android:text="公司介绍"
+            android:textColor="@color/text_color"
+            android:textSize="@dimen/title" />
+
+    </LinearLayout>
 
 </LinearLayout>
 

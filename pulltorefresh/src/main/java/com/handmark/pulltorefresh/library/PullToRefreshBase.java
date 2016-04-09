@@ -1650,4 +1650,11 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 		void onSmoothScrollFinished();
 	}
 
+	public boolean isHeaderShown() {
+		return getHeaderLayout().isShown();
+	}
+
+	public boolean isFooterShown() {
+		return getFooterLayout().isShown();
+	}
 }

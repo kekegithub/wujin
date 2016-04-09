@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/shopImg"
             android:layout_toRightOf="@id/shopImg"
+            android:maxEms="10"
             android:textColor="@color/white"
             android:textSize="@dimen/title" />
 
@@ -66,7 +67,7 @@
         <View
             android:id="@+id/divider"
             android:layout_width="1dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"

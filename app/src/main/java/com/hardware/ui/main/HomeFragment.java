@@ -22,14 +22,15 @@ import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.ProductsDetailFragment;
+import com.hardware.ui.products.MoreDiscountSaleFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
 import com.hardware.view.MyGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
-import com.zhan.framework.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,8 +53,8 @@ public class HomeFragment extends ABaseFragment{
     MyGridView mProTypeGridView ;
     @ViewInject(id = R.id.home_horizon_listview)
     HorizontalListView mShopListView ;
-   /* @ViewInject(idStr = "sale_more", click = "OnClick")
-    View viewSaleMore;//更多折扣*/
+    @ViewInject(idStr = "sale_more", click = "OnClick")
+    View viewSaleMore;//更多折扣
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -156,7 +157,7 @@ public class HomeFragment extends ABaseFragment{
                 }
             }
 
-        });
+        }, HttpRequestUtils.RequestType.GET);
     }
 
     private List<Map<String, Object>> getData(){
@@ -412,11 +413,11 @@ public class HomeFragment extends ABaseFragment{
     }
 
 
-/*    void OnClick(View v) {
+    void OnClick(View v) {
         switch (v.getId()) {
             case R.id.sale_more:
-                ShopHomePageFragment.launch(getActivity(), 262);
+                MoreDiscountSaleFragment.launch(getActivity());
                 break;
         }
-    }*/
+    }
 }

@@ -1,6 +1,7 @@
 package com.hardware.ui.products;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +24,7 @@ import com.hardware.tools.ToolsHelper;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
@@ -336,8 +338,10 @@ public class MoreDiscountSaleFragment extends ABaseFragment {
                 .showImageOnLoading(R.drawable.ic_launcher)
                 .showImageForEmptyUri(R.drawable.ic_launcher)
                 .showImageOnFail(R.drawable.ic_launcher)
-                .cacheInMemory(true)
+                .cacheInMemory(false)
+                .bitmapConfig(Bitmap.Config.RGB_565)
                 .cacheOnDisk(true)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
                 .considerExifParams(true)
                 .build();
     }

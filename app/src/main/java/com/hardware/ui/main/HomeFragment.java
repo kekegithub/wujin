@@ -27,6 +27,7 @@ import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
 import com.hardware.view.MyGridView;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
@@ -138,7 +139,9 @@ public class HomeFragment extends ABaseFragment{
 
     @Override
     public void requestData() {
-        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, null, new BaseHttpRequestTask<HomeProductsBean>() {
+        RequestParams requestParams=new RequestParams();
+        requestParams.put("regionName","江苏省");
+        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {
                 return ToolsHelper.parseJson(content, HomeProductsBean.class);

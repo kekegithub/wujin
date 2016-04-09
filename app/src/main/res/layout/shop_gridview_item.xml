@@ -19,7 +19,8 @@
         android:lines="2"
         android:ellipsize="end"
         android:textColor="@color/text_color"
-        android:textSize="@dimen/body_text_small" />
+        android:textSize="@dimen/body_text_small"
+        android:text="123"/>
 
     <View
         android:layout_width="match_parent"
@@ -39,7 +40,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:textColor="@color/colorSub"
-            android:textSize="@dimen/body_text_small" />
+            android:textSize="@dimen/body_text_small"
+            android:text="123"/>
 
         <TextView
             android:id="@+id/sale_count"
@@ -47,6 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:textColor="@color/text_color_sub"
-            android:textSize="@dimen/body_text_small" />
+            android:textSize="@dimen/body_text_small"
+            android:text="123"/>
     </RelativeLayout>
 </LinearLayout>

@@ -19,6 +19,8 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
 import com.hardware.bean.ProductContent;
+import com.hardware.ui.home.HomeListFragment;
+import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.ProductsDetailFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
@@ -91,6 +93,17 @@ public class HomeFragment extends ABaseFragment{
         mSimpleAdapter = new SimpleAdapter(getActivity(), mDataList, R.layout.home_gridview_item, from, to);
         mGridView.setAdapter(mSimpleAdapter);
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                if(position == 7){
+                    MoreFragment.launch(getActivity(), mIconName[position]);
+                }else{
+                    HomeListFragment.launch(getActivity(), mIconName[position]);
+                }
+            }
+        });
+
         mSaleGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -105,7 +118,12 @@ public class HomeFragment extends ABaseFragment{
         mProTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ToastUtils.toast(mProTypeList.get(position).getId() + "");
+                int priductId = mProTypeList.get(position).getId() ;
+                String district = "江苏省南通市启东市";
+                ProductContent content = new ProductContent();
+                content.setId(priductId);
+                content.setDistrict(district);
+                ProductsDetailFragment.launch(getActivity(), content);
 
             }
         });
@@ -128,7 +146,7 @@ public class HomeFragment extends ABaseFragment{
             @Override
             protected void onSuccess(HomeProductsBean responseBean) {
                 super.onSuccess(responseBean);
-                if (responseBean != null) {
+                if (responseBean != null && responseBean.getFlag() == 1) {
                     mSaleList = responseBean.getMessage().getRows();
                     mProTypeList = responseBean.getProType().getRows();
                     mShopList = responseBean.getShops().getRows();
@@ -274,8 +292,8 @@ public class HomeFragment extends ABaseFragment{
             }
 
             viewHolder.saleShopName.setText(saleList.get(position).getProductName());
-            viewHolder.saleDiscountPrice.setText(saleList.get(position).getMinSalePrice()+"元");
-            viewHolder.saleOriginalPrice.setText(saleList.get(position).getMarketPrice() + "元");
+            viewHolder.saleDiscountPrice.setText("￥"+saleList.get(position).getMinSalePrice()+"元");
+            viewHolder.saleOriginalPrice.setText("￥"+saleList.get(position).getMarketPrice() + "元");
             viewHolder.saleOriginalPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG);
             String imgUrl=ApiConstants.IMG_BASE_URL  + saleList.get(position).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
@@ -324,7 +342,7 @@ public class HomeFragment extends ABaseFragment{
             }
 
             viewHolder.protypeName.setText(mProTypeList.get(position).getProductName());
-            viewHolder.protypePrice.setText(mProTypeList.get(position).getMarketPrice()+"");
+            viewHolder.protypePrice.setText("￥"+mProTypeList.get(position).getMarketPrice()+"元");
             String imgUrl=ApiConstants.IMG_BASE_URL  + mProTypeList.get(position).getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
             return convertView;

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="RatingBar">
+        <!-- 不可用图片 -->
+        <attr name="disable_star" format="reference" />
+        <!-- 空图片 -->
+        <attr name="empty_star" format="reference" />
+        <!-- 一半的图片 -->
+        <attr name="half_star" format="reference" />
+        <!-- 完全的图片 -->
+        <attr name="full_star" format="reference" />
+        <!-- 显示个数 -->
+        <attr name="numStars" format="integer" />
+        <!-- 等级 -->
+        <attr name="rating" format="float" />
+        <!-- 是否是指示器 -->
+        <attr name = "isIndicator" format = "boolean" />
+        <!-- 每个星星的间距 -->
+        <attr name="startsPadding" format="dimension" />
+        <!-- 是否可用-->
+        <attr name = "enable" format = "boolean" />
+    </declare-styleable>
+</resources>

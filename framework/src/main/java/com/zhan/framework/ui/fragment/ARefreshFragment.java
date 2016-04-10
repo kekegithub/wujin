@@ -674,6 +674,26 @@ public abstract class ARefreshFragment<T extends Serializable, Ts extends Serial
 		}
 	}
 
+	public int getNextPage(RefreshMode mode){
+		int pageIndex;
+		//刷新
+		if(mode==RefreshMode.refresh||mode==RefreshMode.reset){
+			pageIndex =getFirstPageIndex();
+		}else{
+			//加载更多
+			if(getAdapterItems() == null || getAdapterItems().size()==0){
+				pageIndex =getFirstPageIndex();
+			}else{
+				pageIndex=getFirstPageIndex()+getAdapterItems().size()/refreshConfig.minResultSize;
+			}
+		}
+		return pageIndex;
+	}
+
+	public int getFirstPageIndex(){
+		return 0;
+	}
+
 	public static class RefreshConfig implements Serializable {
 
 		public static final long serialVersionUID = -963125420415611042L;

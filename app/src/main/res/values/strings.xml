@@ -4,4 +4,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--首页-->
+    <string name="sale_more">折扣特卖</string>
+    <string name="home_protype_more">热销单品</string>
+    <string name="home_shop_more_title">人气店铺商</string>
 </resources>

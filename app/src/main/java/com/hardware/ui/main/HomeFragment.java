@@ -20,6 +20,7 @@ import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
 import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
+import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.ProductsDetailFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
@@ -56,6 +57,10 @@ public class HomeFragment extends ABaseFragment{
     HorizontalListView mShopListView ;
     @ViewInject(idStr = "sale_more", click = "OnClick")
     View viewSaleMore;//更多折扣
+    @ViewInject(idStr = "home_protype_more", click = "OnClick")
+    View viewProtypeMore ;
+    @ViewInject(idStr = "home_shop_more", click = "onClick")
+    View viewShopMore ;
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -419,7 +424,13 @@ public class HomeFragment extends ABaseFragment{
     void OnClick(View v) {
         switch (v.getId()) {
             case R.id.sale_more:
-                MoreDiscountSaleFragment.launch(getActivity());
+                MoreDiscountSaleFragment.launch(getActivity(),getString(R.string.sale_more));
+                break;
+            case R.id.home_protype_more:
+                MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.home_protype_more));
+                break;
+            case R.id.home_shop_more:
+                MoreDiscountShopFragment.launch(getActivity());
                 break;
         }
     }

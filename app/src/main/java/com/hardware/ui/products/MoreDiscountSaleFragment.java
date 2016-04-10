@@ -25,6 +25,7 @@ import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
 import com.zhan.framework.network.HttpRequestHandler;
 import com.zhan.framework.network.HttpRequestUtils;
@@ -40,16 +41,33 @@ import java.util.List;
  * Created by Administrator on 2016/4/9.
  */
 public class MoreDiscountSaleFragment extends ABaseFragment {
+    private final static String ARG_KEY = "morediscount";
 
-    public static void launch(Activity from) {
-        FragmentContainerActivity.launch(from, MoreDiscountSaleFragment.class, null);
+    public static void launch(Activity from,String mTitle) {
+        FragmentArgs args = new FragmentArgs();
+        args.add(ARG_KEY, mTitle);
+        FragmentContainerActivity.launch(from, MoreDiscountSaleFragment.class, args);
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mTitle = savedInstanceState == null ? (String) getArguments().getSerializable(ARG_KEY)
+                : (String) savedInstanceState.getSerializable(ARG_KEY);
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(ARG_KEY, mTitle);
+    }
+
 
     private final static int PAGE_SIZE=10;
 
     @ViewInject(id = R.id.pull_refresh_list)
     private PullToRefreshListView mPullToRefreshListView;
     private ListView mListView;
+    private String mTitle ;
 
     private boolean QueryMore=false;
     private boolean HasMoreData=true;
@@ -154,7 +172,7 @@ public class MoreDiscountSaleFragment extends ABaseFragment {
     @Override
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
-        getActivity().setTitle("折扣特卖");
+        getActivity().setTitle(mTitle);
         mInflater=inflater;
         options= buldDisplayImageOptions();
         mListView = mPullToRefreshListView.getRefreshableView();

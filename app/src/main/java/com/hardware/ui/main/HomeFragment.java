@@ -29,7 +29,6 @@ import com.hardware.view.MyGridView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
-import com.zhan.framework.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

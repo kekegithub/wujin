@@ -180,7 +180,7 @@ public class ProductDetailFragment extends ABaseFragment {
         }else{
             RequestParams requestParams = new RequestParams();
             requestParams.put("shopid", id);
-            requestParams.put("Page", getNextPage());
+            //requestParams.put("Page", getNextPage());
 
 
 

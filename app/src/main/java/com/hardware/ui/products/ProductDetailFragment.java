@@ -10,7 +10,10 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -19,6 +22,7 @@ import com.hardware.R;
 import com.hardware.api.ApiConstants;
 import com.hardware.bean.ProductContent;
 import com.hardware.bean.ProductsDetailResponse;
+import com.hardware.bean.ShopRecommendListRespon;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.view.RatingBar;
@@ -32,6 +36,10 @@ import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 import com.zhan.framework.utils.ToastUtils;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
 
 /**
  * Created by Administrator on 2016/4/11.
@@ -39,6 +47,8 @@ import com.zhan.framework.utils.ToastUtils;
 public class ProductDetailFragment extends ABaseFragment {
     private final static String ARG_KEY = "productId";
 
+    @ViewInject(id = R.id.iv_back,click = "OnClick")
+    ImageView mBack ;
     //第一页
     @ViewInject(id = R.id.products_detail_head_bg)
     ImageView mProductHead;
@@ -84,14 +94,16 @@ public class ProductDetailFragment extends ABaseFragment {
     FrameLayout mRecommendFrameLayout ;
     @ViewInject(id = R.id.detail_picture_framelayout_detail)
     TextView mProductDetailPrictue ;
-    @ViewInject(id = R.id.detail_recommend_listview)
-    ListView mRecommengListView;
+    @ViewInject(id = R.id.detail_recommend_gridview)
+    GridView mRecommengGridView;
 
 
     private ProductContent content;
     private int id;
     private String district;
     private int RecommendFrameLayoutfalg = 0 ;
+    private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
+    private RecommendAdpater mRecommendAdpater ;
 
 
 
@@ -180,10 +192,137 @@ public class ProductDetailFragment extends ABaseFragment {
         }else{
             RequestParams requestParams = new RequestParams();
             requestParams.put("shopid", id);
-            //requestParams.put("Page", getNextPage());
+            requestParams.put("Page", 1);
+            startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
+                @Override
+                public void onRequestFinished(ResultCode resultCode, String result) {
+                    switch (resultCode) {
+                        case success:
+                            //tempProducts.clear();
+                            ShopRecommendListRespon response = ToolsHelper.parseJson(result, ShopRecommendListRespon.class);
+                            if (response != null && response.getFlag() == 1 && response.getMessage() != null) {
+                                List<Recommend> tempProducts = new LinkedList<>();
+                                for (ShopRecommendListRespon.MessageEntity messageEntity : response.getMessage()) {
+                                    Recommend recommend = new Recommend();
+                                    recommend.setId(messageEntity.getId());
+                                    recommend.setImgUrl(messageEntity.getImgUrl());
+                                    recommend.setName(messageEntity.getName());
+                                    recommend.setSaleCounts(messageEntity.getSaleCounts());
+                                    recommend.setMarketPrice(messageEntity.getMarketPrice());
+                                    tempProducts.add(recommend);
+                                }
+                                mRecommengGridView.setAdapter(new RecommendAdpater(tempProducts));
+                               // mRecommendAdpater.notifyDataSetChanged();
+                            }
+                            break;
+                        case canceled:
+                            break;
+                        default:
+                            ToastUtils.toast(result);
+                            break;
+                    }
+                }
+            }, HttpRequestUtils.RequestType.GET);
+        }
+    }
+
+    class RecommendAdpater extends BaseAdapter{
+
+        private List<Recommend> tempProducts = new ArrayList<>();
+        public RecommendAdpater(List<Recommend> tempProducts) {
+            this.tempProducts = tempProducts;
+        }
+
+        @Override
+        public int getCount() {
+            return tempProducts.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return tempProducts.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ViewHolder viewHolder;
+            if(convertView == null){
+                viewHolder = new ViewHolder();
+                convertView = LayoutInflater.from(getActivity()).inflate(R.layout.products_detail_gridview_item,null);
+                viewHolder.imageView = (ImageView) convertView.findViewById(R.id.iv_products_detail_item);
+                viewHolder.productName = (TextView) convertView.findViewById(R.id.products_detail_item_productname);
+                viewHolder.productPrice = (TextView) convertView.findViewById(R.id.products_detail_item_product_price);
+                convertView.setTag(viewHolder);
+            }else{
+                viewHolder = (ViewHolder)convertView.getTag();
+            }
+
+            viewHolder.productName.setText("￥"+tempProducts.get(position).getMarketPrice()+"");
+            viewHolder.productName.setText(tempProducts.get(position).getName());
+            String imgUrl=ApiConstants.IMG_BASE_URL  + tempProducts.get(position).getImgUrl();
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
+
+            return convertView;
+        }
+    }
+
+    class ViewHolder{
+        ImageView imageView;
+        TextView productName ;
+        TextView productPrice ;
+    }
 
 
+    class Recommend{
+        private int Id;
+        private String imgUrl;
+        private String name;
+        private int SaleCounts;
+        private int MarketPrice;
 
+        public void setId(int Id) {
+            this.Id = Id;
+        }
+
+        public void setImgUrl(String imgUrl) {
+            this.imgUrl = imgUrl;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public void setSaleCounts(int SaleCounts) {
+            this.SaleCounts = SaleCounts;
+        }
+
+        public void setMarketPrice(int MarketPrice) {
+            this.MarketPrice = MarketPrice;
+        }
+
+        public int getId() {
+            return Id;
+        }
+
+        public String getImgUrl() {
+            return imgUrl;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getSaleCounts() {
+            return SaleCounts;
+        }
+
+        public int getMarketPrice() {
+            return MarketPrice;
         }
     }
 
@@ -235,6 +374,9 @@ public class ProductDetailFragment extends ABaseFragment {
 
                 RecommendFrameLayoutfalg = 1 ;
                 requestData();
+                break;
+            case R.id.iv_back:
+                getActivity().finish();
                 break;
         }
     }

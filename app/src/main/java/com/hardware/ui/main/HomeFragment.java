@@ -23,11 +23,7 @@ import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
-<<<<<<< HEAD
 import com.hardware.ui.products.ProductDetailFragment;
-=======
-import com.hardware.ui.products.ProductsDetailFragment;
->>>>>>> 0f46dc573ecd221ca5a2e0a8f1d26bd4cadf750d
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;

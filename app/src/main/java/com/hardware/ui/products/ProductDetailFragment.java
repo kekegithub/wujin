@@ -25,8 +25,10 @@ import com.hardware.bean.ProductsDetailResponse;
 import com.hardware.bean.ShopRecommendListRespon;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.ui.shop.ShopHomePageFragment;
+import com.hardware.view.MyGridView;
 import com.hardware.view.RatingBar;
 import com.loopj.android.http.RequestParams;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
@@ -95,7 +97,7 @@ public class ProductDetailFragment extends ABaseFragment {
     @ViewInject(id = R.id.detail_picture_framelayout_detail)
     TextView mProductDetailPrictue ;
     @ViewInject(id = R.id.detail_recommend_gridview)
-    GridView mRecommengGridView;
+    MyGridView mRecommengGridView;
 
 
     private ProductContent content;
@@ -104,6 +106,7 @@ public class ProductDetailFragment extends ABaseFragment {
     private int RecommendFrameLayoutfalg = 0 ;
     private List<ShopRecommendListRespon.MessageEntity> mRecommendList = new ArrayList<>();
     private RecommendAdpater mRecommendAdpater ;
+    private DisplayImageOptions options;
 
 
 
@@ -137,6 +140,7 @@ public class ProductDetailFragment extends ABaseFragment {
         super.layoutInit(inflater, savedInstanceSate);
         id = content.getId();
         district = content.getDistrict();
+        options=ToolsHelper.buldDefDisplayImageOptions();
     }
 
     @Override
@@ -192,7 +196,7 @@ public class ProductDetailFragment extends ABaseFragment {
         }else{
             RequestParams requestParams = new RequestParams();
             requestParams.put("shopid", id);
-            requestParams.put("Page", 1);
+            requestParams.put("page", 1);
             startRequest(ApiConstants.PRODUCTS_SHOPSPRODUCTS, requestParams, new HttpRequestHandler() {
                 @Override
                 public void onRequestFinished(ResultCode resultCode, String result) {
@@ -212,7 +216,6 @@ public class ProductDetailFragment extends ABaseFragment {
                                     tempProducts.add(recommend);
                                 }
                                 mRecommengGridView.setAdapter(new RecommendAdpater(tempProducts));
-                               // mRecommendAdpater.notifyDataSetChanged();
                             }
                             break;
                         case canceled:
@@ -265,7 +268,7 @@ public class ProductDetailFragment extends ABaseFragment {
             viewHolder.productName.setText("￥"+tempProducts.get(position).getMarketPrice()+"");
             viewHolder.productName.setText(tempProducts.get(position).getName());
             String imgUrl=ApiConstants.IMG_BASE_URL  + tempProducts.get(position).getImgUrl();
-            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView);
+            ImageLoader.getInstance().displayImage(imgUrl, viewHolder.imageView,options);
 
             return convertView;
         }

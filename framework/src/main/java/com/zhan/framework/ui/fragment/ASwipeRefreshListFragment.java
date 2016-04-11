@@ -17,8 +17,8 @@ import java.io.Serializable;
 /**
  * Created by wangdan on 15-1-19.
  */
-public abstract class ASwipeRefreshListFragment<T extends Serializable, Ts extends Serializable>
-                                            extends ARefreshFragment<T, Ts, ListView>
+public abstract class ASwipeRefreshListFragment<T>
+                                            extends ARefreshFragment<T, ListView>
                                             implements SwipeRefreshLayout.OnRefreshListener {
     static String TAG = "ASwipeRefreshListFragment";
 

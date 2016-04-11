@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * 普通的ListView
  *
  */
-public abstract class AListFragment<T extends Serializable, Ts extends Serializable> extends ARefreshFragment<T, Ts, ListView> {
+public abstract class AListFragment<T> extends ARefreshFragment<T,ListView> {
 
 	@ViewInject(idStr = "listView")
 	ListView listView;

@@ -28,4 +28,5 @@ public class ApiConstants {
     //更多人气店铺
     public static final String MORE_POPULARITY_SHOP_LIST = "common/aplHome/popularityShopsList";
 
+    
 }

@@ -45,7 +45,7 @@ public abstract class AAutoReleaseStripTabsFragment<T extends AStripTabsFragment
                 Logger.w(String.format("刷新第%d个fragment的资源", mCurrentPosition));
                 //BitmapLoader.getInstance().clearCache();
 
-                ((ARefreshFragment<Serializable, Serializable, View>) fragment).refreshUI();
+                ((ARefreshFragment<Object, View>) fragment).refreshUI();
             }
         }
     };
@@ -67,7 +67,7 @@ public abstract class AAutoReleaseStripTabsFragment<T extends AStripTabsFragment
             if (fragment != null && fragment instanceof ARefreshFragment) {
                 Logger.w(String.format("释放第%d个fragment的资源", position));
 
-                ((ARefreshFragment<Serializable, Serializable, View>) fragment).releaseImageViewByIds();
+                ((ARefreshFragment<Object, View>) fragment).releaseImageViewByIds();
             }
             else {
                 Logger.e(String.format("释放的第%d个fragment不存在", position));

@@ -23,7 +23,11 @@ import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
+<<<<<<< HEAD
 import com.hardware.ui.products.ProductDetailFragment;
+=======
+import com.hardware.ui.products.ProductsDetailFragment;
+>>>>>>> 0f46dc573ecd221ca5a2e0a8f1d26bd4cadf750d
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
@@ -424,7 +428,7 @@ public class HomeFragment extends ABaseFragment{
     void OnClick(View v) {
         switch (v.getId()) {
             case R.id.sale_more:
-                MoreDiscountSaleFragment.launch(getActivity(),getString(R.string.sale_more));
+                MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.sale_more));
                 break;
             case R.id.home_protype_more:
                 MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.home_protype_more));

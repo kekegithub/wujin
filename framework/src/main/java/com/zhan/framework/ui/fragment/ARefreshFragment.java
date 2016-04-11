@@ -28,7 +28,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ARefreshFragment<T extends Serializable, Ts extends Serializable, V extends View> extends ABaseFragment
+public abstract class ARefreshFragment<T, V extends View> extends ABaseFragment
 		implements OnScrollListener, AdapterView.OnItemClickListener {
 
 	private static final String TAG = "ARefresh";
@@ -241,6 +241,8 @@ public abstract class ARefreshFragment<T extends Serializable, Ts extends Serial
 			pagingTask = this;
 		}
 
+
+
 		/*@Override
 		public Result parseResponseToResult(String content)  {
 			String previousPage = null;
@@ -285,13 +287,13 @@ public abstract class ARefreshFragment<T extends Serializable, Ts extends Serial
 				addItems(resultList);
 
 			// 处理分页数据
-			if (mPaging != null) {
+			/*if (mPaging != null) {
 				if (getAdapterItems() != null && getAdapterItems().size() != 0)
 					mPaging.processData(result, getAdapterItems().get(0),
 							getAdapterItems().get(getAdapterItems().size() - 1));
 				else
 					mPaging.processData(result, null, null);
-			}
+			}*/
 
 			// 如果是重置数据，重置canLoadMore
 			//if (mode == RefreshMode.reset)
@@ -575,7 +577,7 @@ public abstract class ARefreshFragment<T extends Serializable, Ts extends Serial
 	 *
 	 * @return <tt>null</tt> 不分页
 	 */
-	protected IPaging<T, Ts> configPaging() {
+	protected IPaging<T> configPaging() {
 		return null;
 	}
 
@@ -583,7 +585,7 @@ public abstract class ARefreshFragment<T extends Serializable, Ts extends Serial
 	 * 获取分页信息
 	 * @return
 	 */
-	protected IPaging<T, Ts> getPaging() {
+	protected IPaging<T> getPaging() {
 		return mPaging;
 	}
 

@@ -16,7 +16,7 @@ import java.io.Serializable;
 /**
  * Created by Administrator
  */
-public abstract class APullToRefreshListFragment<T extends Serializable, Ts extends Serializable> extends ARefreshFragment<T, Ts, ListView> {
+public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, ListView> {
     static String TAG = "APullToRefreshListFragment";
 
     @ViewInject(idStr = "pull_refresh_list")

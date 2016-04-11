@@ -1,12 +1,5 @@
 package com.zhan.framework.support.paging;
 
-import android.text.TextUtils;
-
-import com.zhan.framework.network.IResult;
-
-import java.io.Serializable;
-import java.lang.reflect.Field;
-
 /**
  * 始终自增，但是有最大分页页码，根据配置的属性获取
  * 
@@ -14,7 +7,7 @@ import java.lang.reflect.Field;
  *
  * @date 2014年9月22日
  */
-public class PageIndexPaging<T extends Serializable, Ts extends Serializable> implements IPaging<T, Ts> {
+public class PageIndexPaging<T> implements IPaging<T> {
 
 	private static final long serialVersionUID = 8485595687197548908L;
 
@@ -38,14 +31,14 @@ public class PageIndexPaging<T extends Serializable, Ts extends Serializable> im
 	}
 
 	@Override
-    public IPaging<T, Ts> newInstance() {
-		return new PageIndexPaging<T, Ts>(pageTotalField);
+    public IPaging<T> newInstance() {
+		return new PageIndexPaging<T>(pageTotalField);
 	}
 
 	@Override
-    public void processData(Ts newDatas, T firstData, T lastData) {
+    public void processData(T firstData, T lastData) {
 		pageIndex++;
-		if (newDatas instanceof IResult) {
+		/*if (newDatas instanceof IResult) {
 			IResult iResult = (IResult) newDatas;
 			if (iResult.isCache() && iResult.pagingIndex() != null) {
 				pageIndex = Integer.parseInt(iResult.pagingIndex()[1]);
@@ -63,7 +56,7 @@ public class PageIndexPaging<T extends Serializable, Ts extends Serializable> im
 					clazz = clazz.getSuperclass();
 				}
 			}
-		}
+		}*/
 	}
 
 	@Override

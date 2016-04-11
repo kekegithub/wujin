@@ -6,14 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-
 import com.zhan.framework.support.inject.InjectUtility;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ABaseAdapter<T extends Serializable> extends BaseAdapter {
+public abstract class ABaseAdapter<T> extends BaseAdapter {
 
     private Context context;
     private ArrayList<T> datas;
@@ -189,9 +187,7 @@ public abstract class ABaseAdapter<T extends Serializable> extends BaseAdapter {
     protected void itemIsEmpty() {
     }
 
-    private abstract static class BaseAdapterHelper<T> implements Serializable {
-
-        private static final long serialVersionUID = 8411760659150853673L;
+    private abstract static class BaseAdapterHelper<T>  {
 
         abstract public int getCount(List<T> datas);
 
@@ -203,7 +199,7 @@ public abstract class ABaseAdapter<T extends Serializable> extends BaseAdapter {
 
     }
 
-    abstract public static class AbstractItemView<T extends Serializable> {
+    abstract public static class AbstractItemView<T> {
 
         private int position;
         private int size;
@@ -236,7 +232,6 @@ public abstract class ABaseAdapter<T extends Serializable> extends BaseAdapter {
          *
          * @param data
          * @param convertView
-         * @param selectedPosition 参照{@link org.aisen.android.component.adapter.ABaseAdapter#setSelected(int)}
          */
         public void updateConvertView(T data, View convertView, int selectedPosition) {
 

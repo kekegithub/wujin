@@ -1,12 +1,13 @@
 package com.hardware.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2016/4/9.
  * 更多折扣特卖
  */
-public class MoreDiscountSaleResponse {
+public class MoreDiscountSaleResponse implements Serializable {
 
     /**
      * flag : 1

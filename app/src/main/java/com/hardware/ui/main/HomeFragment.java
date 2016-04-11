@@ -20,13 +20,17 @@ import com.hardware.api.ApiConstants;
 import com.hardware.bean.HomeProductsBean;
 import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
+import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
 import com.hardware.ui.products.ProductsDetailFragment;
+import com.hardware.ui.products.MoreDiscountSaleFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
 import com.hardware.view.MyGridView;
+import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ABaseFragment;
 
@@ -51,8 +55,12 @@ public class HomeFragment extends ABaseFragment{
     MyGridView mProTypeGridView ;
     @ViewInject(id = R.id.home_horizon_listview)
     HorizontalListView mShopListView ;
-   /* @ViewInject(idStr = "sale_more", click = "OnClick")
-    View viewSaleMore;//更多折扣*/
+    @ViewInject(idStr = "sale_more", click = "OnClick")
+    View viewSaleMore;//更多折扣
+    @ViewInject(idStr = "home_protype_more", click = "OnClick")
+    View viewProtypeMore ;
+    @ViewInject(idStr = "home_shop_more", click = "onClick")
+    View viewShopMore ;
 
     private ArrayList<ImageView> mImageSource;
     private int[] mImages = {R.drawable.home_view_anim_banner1, R.drawable.home_view_anim_banner2, R.drawable.home_view_anim_banner3};
@@ -136,7 +144,9 @@ public class HomeFragment extends ABaseFragment{
 
     @Override
     public void requestData() {
-        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, null, new BaseHttpRequestTask<HomeProductsBean>() {
+        RequestParams requestParams=new RequestParams();
+        requestParams.put("regionName","江苏省");
+        startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {
                 return ToolsHelper.parseJson(content, HomeProductsBean.class);
@@ -155,7 +165,7 @@ public class HomeFragment extends ABaseFragment{
                 }
             }
 
-        });
+        }, HttpRequestUtils.RequestType.GET);
     }
 
     private List<Map<String, Object>> getData(){
@@ -411,11 +421,17 @@ public class HomeFragment extends ABaseFragment{
     }
 
 
-/*    void OnClick(View v) {
+    void OnClick(View v) {
         switch (v.getId()) {
             case R.id.sale_more:
-                ShopHomePageFragment.launch(getActivity(), 262);
+                MoreDiscountSaleFragment.launch(getActivity(),getString(R.string.sale_more));
+                break;
+            case R.id.home_protype_more:
+                MoreDiscountSaleFragment.launch(getActivity(), getString(R.string.home_protype_more));
+                break;
+            case R.id.home_shop_more:
+                MoreDiscountShopFragment.launch(getActivity());
                 break;
         }
-    }*/
+    }
 }

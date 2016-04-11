@@ -17,4 +17,10 @@ public class ApiConstants {
 
     //店铺产品
     public static final String SHOP_PRODUCTS_LIST ="common/aplHome/shopProductsList";
+
+    //更多折扣产品
+    public static final String MORE_DISCOUNT_SALE_LIST ="common/aplHome/volumeproductsList";
+
+    //更多人气店铺
+    public static final String MORE_POPULARITY_SHOP_LIST = "common/aplHome/popularityShopsList";
 }

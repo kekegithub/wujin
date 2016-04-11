@@ -7,14 +7,14 @@ import android.widget.ListView;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
-import com.zhan.framework.R;
+import com.hardware.R;
 import com.zhan.framework.support.inject.ViewInject;
 import com.zhan.framework.ui.fragment.ARefreshFragment;
 
 import java.io.Serializable;
 
 /**
- * Created by wangdan on 15-1-19.
+ * Created by Administrator
  */
 public abstract class APullToRefreshListFragment<T extends Serializable, Ts extends Serializable> extends ARefreshFragment<T, Ts, ListView> {
     static String TAG = "APullToRefreshListFragment";

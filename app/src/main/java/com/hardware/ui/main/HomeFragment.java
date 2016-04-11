@@ -145,7 +145,7 @@ public class HomeFragment extends ABaseFragment{
     @Override
     public void requestData() {
         RequestParams requestParams=new RequestParams();
-        requestParams.put("regionName","江苏省");
+        requestParams.put("regionName","江苏省南通市");
         startRequest(ApiConstants.MOBILE_HOME_PRODUCTS_LIST, requestParams, new BaseHttpRequestTask<HomeProductsBean>() {
             @Override
             public HomeProductsBean parseResponseToResult(String content) {

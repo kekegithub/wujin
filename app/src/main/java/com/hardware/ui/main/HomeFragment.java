@@ -22,8 +22,8 @@ import com.hardware.bean.ProductContent;
 import com.hardware.ui.home.HomeListFragment;
 import com.hardware.ui.home.MoreDiscountShopFragment;
 import com.hardware.ui.home.MoreFragment;
-import com.hardware.ui.products.ProductsDetailFragment;
 import com.hardware.ui.products.MoreDiscountSaleFragment;
+import com.hardware.ui.products.ProductDetailFragment;
 import com.hardware.ui.shop.ShopHomePageFragment;
 import com.hardware.tools.ToolsHelper;
 import com.hardware.view.HorizontalListView;
@@ -59,7 +59,7 @@ public class HomeFragment extends ABaseFragment{
     View viewSaleMore;//更多折扣
     @ViewInject(idStr = "home_protype_more", click = "OnClick")
     View viewProtypeMore ;
-    @ViewInject(idStr = "home_shop_more", click = "onClick")
+    @ViewInject(idStr = "home_shop_more", click = "OnClick")
     View viewShopMore ;
 
     private ArrayList<ImageView> mImageSource;
@@ -119,7 +119,7 @@ public class HomeFragment extends ABaseFragment{
                 ProductContent content = new ProductContent();
                 content.setId(priductId);
                 content.setDistrict(district);
-                ProductsDetailFragment.launch(getActivity(), content);
+                ProductDetailFragment.launch(getActivity(), content);
             }
         });
         mProTypeGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -130,7 +130,7 @@ public class HomeFragment extends ABaseFragment{
                 ProductContent content = new ProductContent();
                 content.setId(priductId);
                 content.setDistrict(district);
-                ProductsDetailFragment.launch(getActivity(), content);
+                ProductDetailFragment.launch(getActivity(), content);
 
             }
         });

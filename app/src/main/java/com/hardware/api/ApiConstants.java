@@ -12,6 +12,10 @@ public class ApiConstants {
 
     //商品详情
     public static final String PRODUCTS_DETAIL = "common/aplHome/productsDetail";
+
+    //同店推荐
+    public static final String PRODUCTS_SHOPSPRODUCTS = "common/aplHome/shopsProducts";
+
     //店铺基本
     public static final String SHOP_BASICALLY ="common/aplHome/shopBasically";
 
@@ -23,4 +27,5 @@ public class ApiConstants {
 
     //更多人气店铺
     public static final String MORE_POPULARITY_SHOP_LIST = "common/aplHome/popularityShopsList";
+
 }

@@ -220,7 +220,7 @@ public abstract class ARefreshFragment<T, V extends View> extends ABaseFragment
 	}
 
 	public void onPullUpToRefresh() {
-		if (!isRefreshing())
+		//if (!isRefreshing())
 			startRequestData(RefreshMode.update);
 	}
 
@@ -233,7 +233,7 @@ public abstract class ARefreshFragment<T, V extends View> extends ABaseFragment
 	/**
 	 * 分页线程，根据{@link IPaging}构造的分页参数列表调用接口
 	 */
-	public abstract class PagingTask<Result extends Serializable> extends BaseHttpRequestTask<Result> {
+	public abstract class PagingTask<Result> extends BaseHttpRequestTask<Result> {
 
 		final protected RefreshMode mode;
 		public PagingTask( RefreshMode mode) {
@@ -331,7 +331,7 @@ public abstract class ARefreshFragment<T, V extends View> extends ABaseFragment
 		@Override
 		public void onRequestFinished(ResultCode resultCode, String result) {
 			super.onRequestFinished(resultCode, result);
-			if (isRefreshing())
+			//if (isRefreshing())
 				onRefreshViewComplete();
 
 			pagingTask = null;

@@ -1,7 +1,6 @@
 package com.hardware.ui.products;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +15,9 @@ import com.hardware.ui.base.APullToRefreshListFragment;
 import com.loopj.android.http.RequestParams;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.zhan.framework.component.container.FragmentArgs;
 import com.zhan.framework.component.container.FragmentContainerActivity;
+import com.zhan.framework.network.HttpRequestUtils;
 import com.zhan.framework.support.adapter.ABaseAdapter;
 import com.zhan.framework.support.inject.ViewInject;
 
@@ -55,7 +54,7 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
     protected void layoutInit(LayoutInflater inflater, Bundle savedInstanceSate) {
         super.layoutInit(inflater, savedInstanceSate);
         getActivity().setTitle(mTitle);
-        options=buldDisplayImageOptions();
+        options=ToolsHelper.buldDefDisplayImageOptions();
     }
 
     @Override
@@ -97,7 +96,7 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
                 }
                 return tempProducts;
             }
-        });
+        }, HttpRequestUtils.RequestType.GET);
     }
 
 
@@ -137,19 +136,6 @@ public class MoreDiscountSaleFragment extends APullToRefreshListFragment<MoreDis
             String imgUrl= ApiConstants.IMG_BASE_URL+product.getImgUrl();
             ImageLoader.getInstance().displayImage(imgUrl, image,options);
         }
-    }
-
-    public DisplayImageOptions buldDisplayImageOptions(){
-        return new DisplayImageOptions.Builder()
-                .showImageOnLoading(R.drawable.ic_launcher)
-                .showImageForEmptyUri(R.drawable.ic_launcher)
-                .showImageOnFail(R.drawable.ic_launcher)
-                .cacheInMemory(true)
-                .bitmapConfig(Bitmap.Config.RGB_565)
-                .cacheOnDisk(true)
-                .imageScaleType(ImageScaleType.IN_SAMPLE_INT)
-                .considerExifParams(true)
-                .build();
     }
 
     public static class Product {

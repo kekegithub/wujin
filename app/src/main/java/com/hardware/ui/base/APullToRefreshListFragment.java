@@ -137,9 +137,6 @@ public abstract class APullToRefreshListFragment<T> extends ARefreshFragment<T, 
         }
     }
 
-    protected boolean canFooterAutoLoadMore() {
-        return true;
-    }
 
     protected String loadMoreBtnLabel() {
         return getString(R.string.comm_request_more);// 加载更多
